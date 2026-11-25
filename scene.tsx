@@ -113,20 +113,10 @@ const Shot = ({ when, last, children }: { when: Span; last?: boolean; children: 
   </Sequence>
 );
 
-const Heading = ({ n, eyebrow, title }: { n: string; eyebrow: string; title: string }): SceneElement => (
-  <Align place="top" inset={52}>
-    <Stack gap={18} align="center">
-      <Stack direction="row" gap={10} align="center">
-        <Shape geometry={circle(4)} fill={theme.accent} />
-        <Text font={sans} size={19} fill={theme.muted}>
-          {eyebrow}
-        </Text>
-      </Stack>
-      <Text font={sans} weight={600} size={50} fill={theme.text}>
-        {title}
-      </Text>
-    </Stack>
-  </Align>
+const Heading = ({ title }: { title: string }): SceneElement => (
+  <Text font={sans} weight={600} size={56} at={[80, 64]} anchor="top-left" fill={theme.text}>
+    {title}
+  </Text>
 );
 
 const cw = (size: number) => mono.measure("0", size);
@@ -172,10 +162,10 @@ const PARSEFF = `let key_value () =
   (k, v)`;
 
 const DirectStyle = (): SceneElement => {
-  const [x, y, w, h] = [200, 220, 880, 290];
-  const size = 18;
+  const [x, y, w, h] = [80, 236, 1120, 350];
+  const size = 24;
   const lineH = size * 1.7;
-  const codeAt: Vec = [x + 44, y + 76];
+  const codeAt: Vec = [x + 48, y + 84];
   const swap = span(3.3, 1.2);
   const flagged = span(1.3, 0.35).cascade(4, 0.16);
   const binds = ANGSTROM.split("\n").flatMap((text, i) => {
@@ -186,7 +176,7 @@ const DirectStyle = (): SceneElement => {
 
   return (
     <Group>
-      <Heading n="01" eyebrow="Direct style" title="Parsers are plain functions." />
+      <Heading title="Parsers are plain functions." />
       <Shape
         geometry={rect(w, h, { radius: 10 })}
         at={[x, y]}
@@ -197,15 +187,15 @@ const DirectStyle = (): SceneElement => {
         <Shape key={"dot" + i} geometry={circle(6)} at={[x + 26 + i * 20, y + 24]} anchor="center" fill={color} />
       ))}
       <Shape geometry={rect(w - 2, 1)} at={[x + 1, y + 48]} fill={theme.border} />
-      <Text font={mono} size={14} at={[W / 2, y + 24]} anchor="center" fill={theme.muted} opacity={track(1).to(0, swap)}>
+      <Text font={mono} size={14} at={[x + w / 2, y + 24]} anchor="center" fill={theme.muted} opacity={track(1).to(0, span(swap.start, 0.4))}>
         angstrom.ml
       </Text>
-      <Text font={mono} size={14} at={[W / 2, y + 24]} anchor="center" fill={theme.muted} opacity={track(0).to(1, swap)}>
+      <Text font={mono} size={14} at={[x + w / 2, y + 24]} anchor="center" fill={theme.muted} opacity={track(0).to(1, span(swap.end - 0.4, 0.4))}>
         parseff.ml
       </Text>
       <Text
         font={mono}
-        size={14}
+        size={15}
         at={[x + w - 24, y + 24]}
         anchor="right"
         fill={track(theme.red).to(theme.green, swap)}
@@ -252,7 +242,7 @@ const DirectStyle = (): SceneElement => {
               palette={palette}
               at={codeAt}
               clip={only}
-              motion={enter(turn.next(0.3), { from: { opacity: 0, offset: [0, 10] } })}
+              motion={enter(turn.next(0.3, 0.05), { from: { opacity: 0, offset: [0, 10] } })}
             >
               {PARSEFF}
             </Code>
@@ -262,8 +252,7 @@ const DirectStyle = (): SceneElement => {
       <Text
         font={sans}
         size={22}
-        at={[W / 2, y + h + 44]}
-        anchor="top"
+        at={[80, 140]}
         fill={theme.muted}
         motion={enter(span(4.6, 0.6), { from: { opacity: 0, offset: [0, 10] } })}
       >
@@ -278,8 +267,8 @@ const DirectStyle = (): SceneElement => {
 const OCTET = "type Parseff.custom_error += Out_of_range of int\n\nlet octet () =\n  let n = Parseff.integer () in\n  if n > 255 then Parseff.error (Out_of_range n)\n  else n";
 
 const TypedErrors = (): SceneElement => {
-  const [cx, cy, cwid, chei] = [100, 220, 540, 236];
-  const cs = 14;
+  const [cx, cy, cwid, chei] = [80, 236, 540, 250];
+  const cs = 15;
   const cl = cs * 1.8;
   const codeAt: Vec = [cx + 28, cy + 70];
   const size = 52;
@@ -287,7 +276,7 @@ const TypedErrors = (): SceneElement => {
   const input = "192.168.1.256";
   const mid = 930;
   const x0 = mid - (input.length * c) / 2;
-  const ty = 226;
+  const ty = 256;
   const octets = [
     { from: 0, to: 3, label: "192" },
     { from: 4, to: 7, label: "168" },
@@ -301,7 +290,7 @@ const TypedErrors = (): SceneElement => {
 
   return (
     <Group>
-      <Heading n="02" eyebrow="Typed errors" title="Errors you can pattern match." />
+      <Heading title="Errors you can pattern match." />
       <Shape geometry={rect(cwid, chei, { radius: 10 })} at={[cx, cy]} fill={theme.surface} stroke={{ color: theme.border, width: 1 }} />
       {(["#FF5F57", "#FEBC2E", "#28C840"] as const).map((color, i) => (
         <Shape key={"dot" + i} geometry={circle(6)} at={[cx + 26 + i * 20, cy + 24]} anchor="center" fill={color} />
@@ -372,28 +361,26 @@ const TypedErrors = (): SceneElement => {
         );
       })}
       <Stack
-        at={[mid, 378]}
-        anchor="top"
-        width={500}
+        at={[660, 410]}
+        anchor="top-left"
+        width={540}
+        radius={8}
         gap={8}
         padding={[22, 16]}
         fill={alpha(theme.red, 0.1)}
         motion={enter(span(fail.end + 0.2, 0.5), { from: { opacity: 0, offset: [0, 14] } })}
       >
-        <Text font={mono} size={15} fill={theme.red}>
+        <Text font={mono} size={17} fill={theme.red}>
           Error
         </Text>
-        <Text font={mono} size={15} fill={theme.text}>
+        <Text font={mono} size={17} fill={theme.text}>
           {"{ kind = Custom (Out_of_range 256); _ }"}
         </Text>
       </Stack>
       <Text
         font={sans}
-        size={17}
-        at={[mid, 480]}
-        anchor="top"
-        width={500}
-        align="center"
+        size={22}
+        at={[80, 140]}
         fill={theme.muted}
         motion={enter(span(fail.end + 0.6, 0.5), { from: { opacity: 0, offset: [0, 8] } })}
       >
@@ -405,12 +392,12 @@ const TypedErrors = (): SceneElement => {
 
 // 4. One pass over broken input: holes where it fails, every error reported.
 const Recovery = (): SceneElement => {
-  const size = 30;
+  const size = 40;
   const c = cw(size);
   const input = "let x = 1; let y = ; let z = 3; let = 4;";
-  const x0 = (W - input.length * c) / 2;
-  const ty = 240;
-  const by = ty + 52;
+  const x0 = 80;
+  const ty = 250;
+  const by = ty + 68;
   const stmts = [
     { from: 0, to: 10, node: 'Let ("x", 1)', ok: true },
     { from: 11, to: 20, node: "Hole", ok: false, at: 19 },
@@ -431,24 +418,24 @@ const Recovery = (): SceneElement => {
     { pos: "1:37:", msg: " expected identifier, found '='" },
     { caret: 36 },
   ];
-  const ds = 16;
+  const ds = 17;
 
   return (
     <Group>
-      <Heading n="03" eyebrow="Error recovery" title="Recover from errors and keep parsing." />
+      <Heading title="Recover from errors and keep parsing." />
       {stmts.map((s, i) =>
         s.ok ? null : (
           <Shape
             key={"bad" + i}
-            geometry={rect(c, 40, { radius: 4 })}
-            at={[x0 + (s.at ?? 0) * c, ty - 1]}
+            geometry={rect(c, 52, { radius: 4 })}
+            at={[x0 + (s.at ?? 0) * c, ty - 3]}
             fill={alpha(theme.red, 0.28)}
             motion={enter(i === 1 ? span(stop.end - 0.05, 0.25) : span(moves[i]!.end - 0.05, 0.25))}
           />
         ),
       )}
       {modes.map((m) => (
-        <Text key={m.text} font={mono} size={15} at={[x0, ty - 40]} fill={theme.muted} opacity={m.opacity}>
+        <Text key={m.text} font={mono} size={20} at={[80, 140]} fill={theme.muted} opacity={m.opacity}>
           {m.text}
         </Text>
       ))}
@@ -459,8 +446,8 @@ const Recovery = (): SceneElement => {
         direction="row"
         gap={12}
         align="center"
-        at={[W / 2, by + 36]}
-        anchor="top"
+        at={[80, by + 40]}
+        anchor="top-left"
         padding={[18, 10]}
         radius={6}
         fill={alpha(theme.red, 0.1)}
@@ -474,13 +461,13 @@ const Recovery = (): SceneElement => {
         </Text>
       </Stack>
       <Shape
-        geometry={rect(2, 44, { radius: 1 })}
+        geometry={rect(2, 58, { radius: 1 })}
         at={stmts.reduce(
-          (t, s, i) => t.to([x0 + s.to * c, ty - 3], moves[i]!, ease.inOut),
-          track<Vec>([x0 - 4, ty - 3])
-            .to([x0 + 10 * c, ty - 3], span(0.7, 0.42), ease.inOut)
-            .to([x0 + 19 * c, ty - 3], stop, ease.inOut)
-            .set([x0 - 4, ty - 3], span(reset)),
+          (t, s, i) => t.to([x0 + s.to * c, ty - 6], moves[i]!, ease.inOut),
+          track<Vec>([x0 - 4, ty - 6])
+            .to([x0 + 10 * c, ty - 6], span(0.7, 0.42), ease.inOut)
+            .to([x0 + 19 * c, ty - 6], stop, ease.inOut)
+            .set([x0 - 4, ty - 6], span(reset)),
         )}
         fill={track(theme.accent).to(theme.red, span(stop.end, 0.2)).set(theme.accent, span(reset))}
         motion={[enter(span(0.5, 0.3)), exit(span(moves[3].end + 0.2, 0.3))]}
@@ -512,7 +499,7 @@ const Recovery = (): SceneElement => {
               stroke={{ color: alpha(color, 0.6), width: 1 }}
               motion={enter(at.next(0.35, 0.1), { from: { opacity: 0, scale: 0.8 }, curve: ease.pop })}
             >
-              <Text font={mono} size={15} fill={color}>
+              <Text font={mono} size={17} fill={color}>
                 {s.node}
               </Text>
             </Center>
@@ -520,10 +507,10 @@ const Recovery = (): SceneElement => {
         );
       })}
       <Stack
-        at={[W / 2, 420]}
-        anchor="top"
-        width={Math.round(input.length * c) + 56}
-        gap={8}
+        at={[80, 440]}
+        anchor="top-left"
+        width={1120}
+        gap={4}
         padding={[28, 20]}
         radius={8}
         fill={theme.surface}
@@ -541,7 +528,7 @@ const Recovery = (): SceneElement => {
               <Text font={mono} size={ds} fill={theme.muted}>
                 {"1 | " + input}
               </Text>
-              <Text font={mono} size={ds} at={[0, ds * 1.4]} fill={theme.muted}>
+              <Text font={mono} size={ds} at={[0, ds * 1.3]} fill={theme.muted}>
                 {"  | " + " ".repeat(d.caret)}
                 <Run fill={theme.red}>^</Run>
               </Text>
@@ -557,12 +544,12 @@ const Recovery = (): SceneElement => {
 const STREAM = "let line () =\n  let s = take_while (fun c -> c <> '\\n') in\n  let _ = char '\\n' in\n  s\n\nlet t = Push.parse line\nlet _ = Push.feed t \"ab\"\nlet _ = Push.feed t \"c\\nd\"";
 
 const Streaming = (): SceneElement => {
-  const [cx, cy, cwid, chei] = [100, 220, 540, 304];
+  const [cx, cy, cwid, chei] = [80, 236, 540, 304];
   const cs = 15;
   const cl = cs * 1.8;
   const codeAt: Vec = [cx + 28, cy + 70];
   const line = (n: number) => codeAt[1] + n * cl - 5;
-  const [tx, ty, tw, th] = [680, 246, 500, 76];
+  const [tx, ty, tw, th] = [660, 262, 540, 76];
   const arrive = span(1.0, 0.7).cascade(2, 1.6);
   const chunks = [
     { text: '"ab"', x: tx + 18 },
@@ -571,7 +558,7 @@ const Streaming = (): SceneElement => {
 
   return (
     <Group>
-      <Heading n="04" eyebrow="Streaming" title="Parse input as it arrives." />
+      <Heading title="Parse input as it arrives." />
       <Shape geometry={rect(cwid, chei, { radius: 10 })} at={[cx, cy]} fill={theme.surface} stroke={{ color: theme.border, width: 1 }} />
       {(["#FF5F57", "#FEBC2E", "#28C840"] as const).map((color, i) => (
         <Shape key={"dot" + i} geometry={circle(6)} at={[cx + 26 + i * 20, cy + 24]} anchor="center" fill={color} />
@@ -589,7 +576,7 @@ const Streaming = (): SceneElement => {
       <Code lang="ocaml" font={mono} size={cs} lineHeight={1.8} palette={palette} at={codeAt}>
         {STREAM}
       </Code>
-      <Text font={mono} size={13} at={[tx, cy]} fill={theme.muted}>
+      <Text font={mono} size={13} at={[tx, 236]} fill={theme.muted}>
         line ()
       </Text>
       <Shape geometry={rect(tw, th, { radius: 10 })} at={[tx, ty]} fill={theme.surface} stroke={{ color: theme.border, width: 1 }} />
@@ -610,9 +597,8 @@ const Streaming = (): SceneElement => {
       ))}
       <Text
         font={mono}
-        size={20}
-        at={[tx + tw / 2, ty + th + 34]}
-        anchor="top"
+        size={24}
+        at={[660, 372]}
         fill={theme.muted}
         motion={[enter(span(arrive[0].end, 0.3)), exit(span(arrive[1].start + 0.3, 0.25))]}
       >
@@ -620,9 +606,8 @@ const Streaming = (): SceneElement => {
       </Text>
       <Text
         font={mono}
-        size={20}
-        at={[tx + tw / 2, ty + th + 34]}
-        anchor="top"
+        size={24}
+        at={[660, 372]}
         fill={theme.green}
         motion={enter(span(arrive[1].end + 0.1, 0.4), { from: { opacity: 0, offset: [0, 8] } })}
       >
@@ -630,11 +615,8 @@ const Streaming = (): SceneElement => {
       </Text>
       <Text
         font={sans}
-        size={17}
-        at={[tx + tw / 2, ty + th + 96]}
-        anchor="top"
-        width={tw}
-        align="center"
+        size={22}
+        at={[80, 140]}
         fill={theme.muted}
         motion={enter(span(arrive[1].end + 0.7, 0.5), { from: { opacity: 0, offset: [0, 8] } })}
       >
@@ -653,12 +635,12 @@ const Performance = (): SceneElement => {
     { name: "Angstrom", kind: "generic", v: 1.26, color: theme.border },
   ];
   const grow = span(0.8, 1.1).cascade(4, 0.12);
-  const [bx, top, rowH, maxW] = [316, 250, 70, 420];
+  const [bx, top, rowH, maxW] = [300, 270, 70, 440];
 
   return (
     <Group>
-      <Heading n="04" eyebrow="Performance" title="Faster than Angstrom on JSON." />
-      <Text font={mono} size={13} at={[100, top - 34]} fill={theme.muted}>
+      <Heading title="Faster than Angstrom on JSON." />
+      <Text font={mono} size={13} at={[80, top - 34]} fill={theme.muted}>
         json parses per second
       </Text>
       {rows.map((r, i) => {
@@ -666,7 +648,7 @@ const Performance = (): SceneElement => {
 
         return (
           <Group key={"row" + i}>
-            <Text font={sans} size={20} at={[100, y + 15]} anchor="left" fill={theme.text}>
+            <Text font={sans} size={20} at={[80, y + 15]} anchor="left" fill={theme.text}>
               {r.name} <Run fill={theme.muted}>{r.kind}</Run>
             </Text>
             <Shape geometry={rect(maxW, 30, { radius: 6 })} at={[bx, y]} fill={theme.raised} />
@@ -681,22 +663,22 @@ const Performance = (): SceneElement => {
           </Group>
         );
       })}
-      <Shape geometry={rect(1, 280)} at={[880, top - 30]} fill={theme.border} />
-      <Stack at={[930, top - 34]} gap={10} motion={enter(span(1.9, 0.6), { from: { opacity: 0, offset: [0, 12] } })}>
+      <Shape geometry={rect(1, 324)} at={[870, 236]} fill={theme.border} />
+      <Stack at={[910, 236]} gap={10} motion={enter(span(1.9, 0.6), { from: { opacity: 0, offset: [0, 12] } })}>
         <Text font={mono} size={13} fill={theme.muted}>
           minor allocations
         </Text>
-        <Text font={display} size={96} fill={theme.text}>
+        <Text font={display} size={128} fill={theme.text}>
           {count(track(1).to(7.4, span(2.0, 1.2)), { format: (n) => n.toFixed(1) + "×", rate: 20 })}
         </Text>
-        <Text font={sans} size={20} width={250} fill={theme.muted}>
+        <Text font={sans} size={20} width={290} fill={theme.muted}>
           fewer minor allocations than Angstrom (optimized)
         </Text>
         <Text font={mono} size={16} fill={theme.text}>
           1.5 GB <Run fill={theme.muted}>vs</Run> 11.1 GB
         </Text>
       </Stack>
-      <Text font={mono} size={13} at={[W / 2, 620]} anchor="top" fill={theme.muted} motion={enter(span(2.6, 0.5))}>
+      <Text font={mono} size={15} at={[80, 144]} fill={theme.muted} motion={enter(span(2.6, 0.5))}>
         JSON array of 10 numbers · 1M parses · bench/bench_json.ml
       </Text>
     </Group>
@@ -718,25 +700,27 @@ const Features = (): SceneElement => {
 
   return (
     <Group>
-      <Heading n="05" eyebrow="Features" title="Also included" />
-      <Grid columns={3} gap={24} at={[W / 2, 220]} anchor="top">
+      <Heading title="Also included" />
+      <Grid columns={3} gap={24} at={[80, 236]} anchor="top-left">
         {FEATURES.map((f, i) => (
           <Stack
             key={f.title}
             gap={10}
-            width={344}
-            height={168}
+            width={357}
+            height={172}
             padding={24}
             radius={8}
             fill={theme.surface}
             stroke={{ color: theme.border, width: 1 }}
             motion={enter(tiles[i]!, { from: { opacity: 0, offset: [0, 20], scale: 0.97 } })}
           >
-            <Icon icon={f.icon} size={26} color={theme.accent} />
-            <Text font={sans} weight={600} size={21} fill={theme.text}>
+            <Center width={28} height={28}>
+              <Icon icon={f.icon} size={26} color={theme.accent} />
+            </Center>
+            <Text font={sans} weight={600} size={22} fill={theme.text}>
               {f.title}
             </Text>
-            <Text font={sans} size={16} width={290} fill={theme.muted}>
+            <Text font={sans} size={17} width={300} fill={theme.muted}>
               {f.body}
             </Text>
           </Stack>
@@ -748,15 +732,14 @@ const Features = (): SceneElement => {
 
 // 7. End card: the mark, the install line, where to read more.
 const Outro = (): SceneElement => {
-  const cy = 270;
   const type = span(0.9, 1.1);
 
   return (
     <Group>
       <Text
         font={display}
-        size={72}
-        at={[W / 2, cy]}
+        size={132}
+        at={[640, 250]}
         anchor="center"
         fill={theme.text}
         motion={enter(span(0.3, 0.6), { from: { opacity: 0, offset: [-20, 0] } })}
@@ -764,22 +747,22 @@ const Outro = (): SceneElement => {
         parseff
       </Text>
       <Center
-        at={[W / 2, 370]}
+        at={[640, 372]}
         anchor="top"
-        padding={[28, 18]}
+        padding={[32, 20]}
         radius={8}
         fill={theme.surface}
         stroke={{ color: theme.border, width: 1 }}
         motion={enter(span(0.6, 0.5), { from: { opacity: 0, offset: [0, 12] } })}
       >
-        <Text font={mono} size={22} fill={theme.text} clip={(own) => track(rect(1, own.height)).to(rect(own.width, own.height), type, ease.linear)}>
+        <Text font={mono} size={26} fill={theme.text} clip={(own) => track(rect(1, own.height)).to(rect(own.width, own.height), type, ease.linear)}>
           $ opam install parseff
         </Text>
       </Center>
       <Text
         font={sans}
         size={20}
-        at={[W / 2, 470]}
+        at={[640, 486]}
         anchor="top"
         fill={theme.muted}
         motion={enter(span(type.end + 0.2, 0.6), { from: { opacity: 0, offset: [0, 8] } })}
@@ -792,13 +775,26 @@ const Outro = (): SceneElement => {
 
 const Chrome = ({ when }: { when: Span }): SceneElement => (
   <Sequence when={when}>
-    <Shape
-      geometry={OCAML}
-      at={[W - 100, 64]}
-      anchor="right"
-      fill="#EE6A1A"
-      motion={[enter(span(0, 0.6)), exit(span(when.over - 0.5, 0.5))]}
-    />
+    <Group motion={[enter(span(0, FADE)), exit(span(when.over - FADE, FADE))]}>
+      <Shape geometry={OCAML} at={[80, 664]} anchor="left" fill="#EE6A1A" />
+      <Text font={sans} weight={600} size={17} at={[116, 664]} anchor="left" fill={theme.text}>
+        parseff
+      </Text>
+      {Array.from({ length: 6 }, (_, k) => {
+        const on = track(k === 0 ? theme.accent : theme.border);
+        const lit = k === 0 ? on : on.to(theme.accent, span(starts[k + 1]! - starts[1]!, FADE));
+
+        return (
+          <Shape
+            key={"tick" + k}
+            geometry={rect(28, 3, { radius: 1.5 })}
+            at={[1002 + k * 34, 664]}
+            anchor="left"
+            fill={k === 5 ? lit : lit.to(theme.border, span(starts[k + 2]! - starts[1]!, FADE))}
+          />
+        );
+      })}
+    </Group>
   </Sequence>
 );
 
@@ -815,7 +811,7 @@ export default scene(
   (canvas) => (
     <Group>
       <Shape geometry={canvas.rect} fill={theme.background} />
-      <Chrome when={span(starts[1]!, starts[7]! - starts[1]!)} />
+      <Chrome when={span(starts[1]! - FADE, starts[7]! - starts[1]!)} />
       <Shot when={shot(0)}>
         <Intro />
       </Shot>
