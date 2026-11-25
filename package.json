@@ -1,0 +1,26 @@
+{
+  "name": "parseff-video",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "svjeez dev scene.tsx",
+    "check": "svjeez check scene.tsx",
+    "typecheck": "tsc --noEmit",
+    "svg": "svjeez svg scene.tsx --out parseff.svg",
+    "video": "svjeez video scene.tsx --scale 1.5 --quality high --color-scheme dark --out out/parseff.mp4"
+  },
+  "dependencies": {
+    "@svjeez/code": "https://pkg.pr.new/saiashirwad/svjeez/@svjeez/code@b2a26a7",
+    "@svjeez/fonts": "https://pkg.pr.new/saiashirwad/svjeez/@svjeez/fonts@b2a26a7",
+    "@svjeez/icons": "https://pkg.pr.new/saiashirwad/svjeez/@svjeez/icons@b2a26a7",
+    "@svjeez/video": "https://pkg.pr.new/saiashirwad/svjeez/@svjeez/video@b2a26a7",
+    "shiki": "^4.6.0",
+    "svjeez": "https://pkg.pr.new/saiashirwad/svjeez/svjeez@b2a26a7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.10",
+    "playwright-core": "^1.65.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
